@@ -1,0 +1,84 @@
+
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% load mathfilters %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ {% block content %}
+<form id="demoForm1" method="post"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+   <div class="content-wrapper">
+      <div class="row">
+         <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+               <div class="card-body">
+                  <h3>Suivi des achats par régits </h3>
+                   <p class="lead font-italic">Listes des Imputations </p>
+                     <hr class="my-4">
+                     <table class="table table-borderless">
+                         <thead class="border-bottom font-weight-bold">
+                         <tr>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">code_chapitre</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">libelle_chapitre_FR</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">code_article</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">libelle_article_FR</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Imputation initiale</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Credit reste</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Taux de Consommation</th>
+                             <th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Gestion bordereau</th>
+                   
+                         </tr>
+                         </thead>
+                         <tbody>
+                         {% for crdt in credits %}
+                         	
+                         <tr>
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{crdt.chapitre.code_chap}}</td>
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{crdt.chapitre.libelle_chap_FR}}</td>
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{crdt.article.code_art}}</td>
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{crdt.article.libelle_art_FR}}</td>
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{crdt.credit_allouee}}</td>
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{crdt.credit_reste}}</td>
+                               {% with answer=crdt.credit_reste.amount|mul:100 %} 
+                               {% with answer1=answer|div:crdt.credit_allouee.amount %} 
+                               {% with taux=100|sub:answer1 %} 
+                               	{% if taux == 100 %}
+                                <td style="border: 1px solid black; padding: 0px; border-radius: 0px; background-color:#FF0000;">
+                           {{ taux }}    %
+                               </td>            
+	                           {% endif %}	
+	                           {% if taux >= 50 and taux < 100 %}
+                                < <td style="border: 1px solid black; padding: 0px; border-radius: 0px; background-color:#FF8A33;">
+                           {{ taux }}    %
+                               </td>            
+	                           {% endif %}
+	                           {% if taux >= 0 and taux < 50 %}
+                                <td style="border: 1px solid black; padding: 0px; border-radius: 0px; background-color:#00FF00;">
+                           {{ taux }}    %
+                               </td>            
+	                           {% endif %}
+                              {% endwith %}
+                               {% endwith %}
+                                {% endwith %}
+                           
+                             <td style="border: 1px solid black; padding: 0px; border-radius: 0px;">
+                                <a style="padding-left:30px;" href="{% url 'BordereauCreate' crdt.id %}" class="d-inline" > <i class="fa fa-file-invoice-dollar"></i></a>
+                             
+                             </td>
+                          
+                         </tr>
+                         {% endfor %}
+                         </tbody>
+                     </table>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+</html>
+
+{% endblock %}

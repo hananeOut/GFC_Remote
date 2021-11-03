@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-after: always;
+  			}
+		}
+    </style>
+
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	table, th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+	{% load static dictionary icons usergroup %}
+	<!-- Font Awesome CSS 	-->
+	<link rel="stylesheet" href="{% static 'fonts/css/all.min.css' %}">
+	<link rel="stylesheet" href="{% static 'fonts/css/all.css' %}">
+
+       
+  </head>
+  <body>
+  
+  	{% for salle, reservations in pv_list.items %}
+  		<div class="container new-page">
+			<img src="{{ institution.header.url }}" alt="Logo ESI" width="100%">
+			<br><br>
+			<h2 align="center"><strong>Procés Verbal d'une Epreuve Ecrite </strong></h2> 
+			<h3 align="center">Année Universitaire : <strong>{{seance.activite.module.formation.annee_univ}}/{{seance.activite.module.formation.annee_univ.annee_suivante}}</strong> Semestre : <strong>{{seance.activite.module.periode.periode}}</strong></h3>
+			<h4 align="center">Module : <strong>{{seance.activite.module.matiere.code}} ({{seance.activite.module.matiere.titre}})</strong></h3>
+			<h5 align="center">Le : {{seance.date|date:'d/m/Y'}} de {{seance.heure_debut}} à {{seance.heure_fin}}</h3>
+			<br><br>
+		
+			<h3 align="center"><strong>Salle: {{salle}} </strong></h3>
+			<br><br>
+			<table class="table table-bordered" width="80%">
+				<thead>
+					<th>Coordinateur du module</th>
+					<th>Remplacé Par</th>
+					<th>Signature</th>
+				</thead>
+				<tbody>
+						<tr>
+							<td>{{seance.activite.module.coordinateur}}</td>
+							<td></td>
+							<td></td>
+						</tr>
+				</tbody>
+			</table>
+			<br><br>
+			<table class="table table-bordered" width="80%">
+				<thead>
+					<th>Surveillant</th>
+					<th>Remplacé par</th>
+					<th>Emargement</th>
+				</thead>
+				<tbody>
+					{% for surveillance in reservations.surveillance_enseignant_list %}
+						<tr>
+							<td>{{surveillance.enseignant}}</td>
+							<td></td>
+							<td></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			<br><br>
+			<table class="table table-bordered" width="80%">
+				<thead>
+					<th>Nombre de présents</th>
+					<th>Nombre de copies remises</th>
+					<th>Observations</th>
+				</thead>
+				<tbody>
+						<tr>
+							<td><br><br></td>
+							<td></td>
+							<td></td>
+						</tr>
+				</tbody>
+			</table>
+			<br><br>
+			
+			<table width="100%">
+				<thead>
+					<th>Place N°</th>
+					<th>Matricule</th>
+					<th>Nom</th>
+					<th>Prénoms</th>
+					<th width="20%">Emargement</th>
+					<th>Observations</th>
+				</thead>
+				<tbody>
+					{% for place in reservations.reservation_place_list %}
+						<tr>
+							<td>{{salle.code}}-{{place.place}}<br><br></td>
+							<td>{{place.inscription.etudiant.matricule}}</td>
+							<td>{{place.inscription.etudiant.nom}}</td>
+							<td>{{place.inscription.etudiant.prenom}}</td>
+							<td></td>
+							<td></td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		</div>
+		
+	{% endfor %}
+</body>
+</html>

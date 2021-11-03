@@ -1,0 +1,102 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ {% load djmoney %}
+ {% block content %}
+ <form id="demoForm" method="post"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+	<div class="content-wrapper">
+		<div class="row">
+			<div class="col-md-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<h3>Creation des Bordereaux</h3>
+						<br>
+						<form class="forms-sample">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">Désignation</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" name="deseingnation" />
+										</div>
+									</div>
+								</div>
+<!-- 								<div class="col-md-6"> -->
+<!-- 									<div class="form-group row"> -->
+<!-- 										<label class="col-sm-3 col-form-label">Regisseur</label> -->
+<!-- 										<div class="col-sm-9"> -->
+<!-- 											<input type="text" class="form-control" name="regisseur" /> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</div>		 -->
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">{{user.prenom}}</label>
+									
+									</div>
+								</div>			
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<a href="{% url 'LitImput' %}" class="btn btn-secondary btn-block">
+										<i class="fa fa-list"></i> Retour
+									</a>
+								</div>
+								<div class="col-md-4">
+									<button type="submit" class="btn btn-primary btn-block" >
+										<i class="fa fa-database"></i>Enregistrer</button>
+								</div>
+							</div>
+						</form>
+						<div class="content-wrapper">
+							<div class="row">
+								<div class="col-md-12 grid-margin stretch-card">
+									<div class="card">
+										<div class="card-body">
+											<p class="lead font-italic">Listes des Bordereaux </p>
+											<hr class="my-4">
+											<table class="table table-borderless">
+												<thead class="border-bottom font-weight-bold">
+												<tr>
+													<th>Bordreau</th>
+													<th>Chapitre</th>
+													<th>Article</th>
+													<th>Désignation</th>
+													<th>Regisseur</th>
+													<th>Ajout des Pieces</th>
+												</tr>
+												</thead>
+												<tbody>
+												{% for bord in borderaux %}
+												<tr>
+													<td>{{bord.id}}</td>
+													<td>{{bord.credit.chapitre.code_chap}}</td>
+													<td>{{bord.credit.article.code_art}}</td>
+													<td>{{bord.deseingnation}}</td>
+													<td>{{user.last_name}}&nbsp{{user.first_name }}</td>
+													<td>
+                                                   <a style="padding-left:30px;" href="{% url 'PieceCreate' bord.id %}" class="d-inline" > <i class="fas fa-plus-square"></i></a>
+													</td>
+												</tr>
+												{% endfor %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </form>
+</html>
+
+{% endblock %}

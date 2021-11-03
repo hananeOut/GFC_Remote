@@ -1,0 +1,136 @@
+
+<!DOCTYPE HTML>
+
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	  {% load static %}
+	  {% load djmoney %}
+	  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+      <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	   <style>
+table {
+  		page-break-inside:auto;
+ 		font-family:"times new roman", times, serif;
+	}
+	th, td {
+	  border: 3px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+
+    </style>
+  </head>
+
+  <table>
+	  <tr>
+		  <td style="border: 0px ;">
+			  <table>
+				  <tr>
+					  <td style="border: 0px ;" colspan="1">
+						  <br><br><br>
+						  <img src ="{% static 'ordonateur.PNG' %}" alt="ordonateur" width= "665" height="355">
+					  </td>
+				  </tr>
+
+				  <tr>
+					  <td style="border: 0px ;" colspan="1">
+						  <br>
+						  <img src ="{% static 'comptable.PNG' %}" alt="comptable" width= "665" height="425">
+					  </td>
+				  </tr>
+			  </table>
+		  </td>
+	   <td style="border: 0px ;"></td>
+		  <td style="border: 0px ;"></td>
+		  <td style="border: 0px ;">
+			  <table width="100%">
+				  <tr>
+					  <td style="border: 0px ;"  colspan="3">
+						  <img src ="{% static 'entete.PNG' %}" alt="entete" width= "700" height="150">
+					  </td>
+				  </tr>
+			  </table>
+	          <table width="100%">
+				  <tr>
+					  <br>
+					  <td style="border: 0px ;" colspan="3">
+						  <p><strong>N° de Bordereau (1) :{{year}}-{{bordereau.id}}</strong></p>
+					  </td>
+				  </tr>
+				  <tr>
+					  <td style="border: 0px ;text-align: left;"><strong>Section: &#8545 </strong><br></td>
+					  <td style="border: 0px ;text-align: center;"><strong>Chapitre: {{bordereau.credit.chapitre.code_chap}}</strong><br></td>
+					  <td style="border: 0px ;text-align: right;" ><strong>Exercice: {{year}} <br></strong></td>
+				  </tr>
+			  </table>
+				    <table width="45%">
+				  <tr>
+					  <td style="border: 0px ;text-align: left;">Désignation </td>
+					  <td style="border: 0px ;text-align: left; font-size: 65px;"> { </td>
+					  <td style="border: 0px ;text-align: left;">de la régie :  Dépense <br> du régisseur : {{user.last_name}}&nbsp{{user.first_name }} </td>
+				  </tr>
+					</table>
+				    <table width="70%">
+				  <tr>
+					  <td style="border: 0px ;text-align: center;" ><strong>A-Dépense: Fonctionnement</strong></td>
+				  </tr>
+					</table>
+						<table width="100%">
+				  <tr>
+					  <td style="border: 0px ;text-align: center;"><strong>(Justifications à produire)</strong></td>
+				  </tr>
+					</table>
+				  <table width="100%">
+				  <tr>
+					  <td style="text-align: left;">Numéro des pièces <br> Justificatives</td>
+					  <td style="text-align: center;">DESIGNATION DE LA PIECE</td>
+					  <td style="text-align: center;">MONTANT </td>
+				  </tr>
+				  {% for piece in pieces %}
+				  <tr>
+					  <td style="text-align: center;">{{piece.id}}/{{year}}</td>
+					  <td style="text-align: center;">{{piece.deseingnation}}</td>
+					  <td style="text-align: center;">{{piece.montant}}</td>
+				  </tr>
+				  {% endfor %}
+				  <tr>
+					  <td></td>
+					  <td style="text-align:right;"><strong>Total</strong></td>
+					  <td style="text-align: center;" ><strong>{{new_sum_pieces}}</strong></td>
+
+				  </tr>
+			  		</table>
+	  				<table width="100%">
+				  <tr>
+					  <td style="border: 0px ;text-align: center;"> (1) Série ininterrompue pour chaque régisseur par chapitre et par exercice <strong> {{year}}</strong></td>
+				  </tr>
+				  <tr>
+					  <td style="border: 0px ;text-align: center;"> Arrêté le présent bordereau comprenant <strong> {{nb_pieces}} </strong> quittances et piéces justificatives, <br> à la somme de: <strong> {{sum_pieces_letter}} Dinars </strong></td>
+				  </tr>
+				  <tr>
+					  <td style="border: 0px ;text-align: right;" colspan="3"><p> A  Oued Smar</p></td>
+					  <td style="border: 0px ;text-align: right;" colspan="3"><p> Le </p></td>
+					  <td style="border: 0px ;text-align: right;" colspan="3"> <p id="date"></p> </td>
+				  </tr>
+				  <tr>
+					  <td style="border: 0px ;text-align: center;"><strong>Le Régisseur Comptable</strong></td>
+				  </tr>
+					</table>
+				  <script type="text/javascript">
+				  n =  new Date();
+				  y = n.getFullYear();
+				  m = n.getMonth() + 1;
+				  d = n.getDate();
+				  document.getElementById("date").innerHTML = d + "/" + m + "/" + y;
+</script>
+			  </table>
+		  </td>
+	  </tr>
+  </table>
+</html>

@@ -1,0 +1,64 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 static icons %}
+
+{% block content %}
+	<br><br>
+	<h2>{{ titre }}</h2>
+	
+	
+	
+    
+    
+      <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#institution">Institution</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#residences">Résidences Universitaires</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#charges">Charges</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#localisation">Géo</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="institution" class="container tab-pane active"><br>
+    	<h5>Informations sur l'institution</h5>
+    	<br><br>
+    	<a href='{% url "settings_update_view" pk=institution.id %}' class='btn btn-warning' >Modifier</a>
+		{% crispy form %}
+    	
+    </div>
+    <div id="residences" class="container tab-pane fade"><br>
+    	<h5>Résidences Universitaires</h5>
+    	<br><br>
+    	<a href="{% url 'residenceuniv_create' %}">{% icon 'plus' %}Résidence Universitaire</a>
+    	<br>
+    	{% render_table residence_univ_table %}
+    </div>
+
+    <div id="charges" class="container tab-pane fade"><br>
+    	<h5>Configuration des charges</h5>
+    	<br><br>
+    	<a href="{% url 'activite_charge_config_create' %}">{% icon 'plus' %}Configuration</a>
+    	<br>
+    	{% render_table activite_charge_config_table %}
+    </div>
+    <div id="localisation" class="container tab-pane fade"><br>
+    	<h5>Importer les listes dePays, Wilayas et Communes</h5>
+        <br>
+        <a href="{% url 'pays_import' %}" class="btn btn-primary">Import Pays</a>
+    	<a href="{% url 'wilayas_import' %}" class="btn btn-primary">Import Wilayas</a>
+    	<a href="{% url 'communes_import' %}" class="btn btn-primary">Import Communes</a>
+    
+    </div>
+  </div>
+
+
+    
+{% endblock %}

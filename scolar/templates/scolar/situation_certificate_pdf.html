@@ -1,0 +1,67 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+{% block title %} 
+	<br><br>
+	SITUATION CERTIFICATE
+	<br><br>
+{% endblock %}
+{% block content %}	
+<big>
+    <table>
+    	<tr>
+    		<td>
+    			<br><br>
+    			<p align="left">
+    				M. {{ inscription.formation.programme.departement.responsable}}, <br>
+					Director of {{ inscription.formation.programme.departement.intitule|english }} <br>
+					{{ institution.nom }}, {{ institution.sigle }}, {{ institution.ville }} <br>
+					Email: {{ inscription.formation.programme.departement.responsable.user.email}} <br>
+    			</p>
+    			<br><br><br><br>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="left">
+    			Dear Madam, Sir
+    			<br><br>
+    			</p>
+    			<p align="justify">
+    				It is hereby certified that, {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom}} ( {{ inscription.etudiant.nom_a }} {{ inscription.etudiant.prenom_a }} ), born on {{ inscription.etudiant.date_naissance }} at {{ inscription.etudiant.lieu_naissance }}<br><br>
+    				Is a registered student at {{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) N°: {{ inscription.etudiant.matricule }}. <br><br>
+    				She/he is preparing a diploma of {{inscription.formation.programme.diplome.intitule|english}}.<br><br> 
+    				She/He is currently following the {{inscription.formation.programme.titre|english}}
+    				{% if inscription.formation.programme.specialite %} 
+    					{{inscription.formation.programme.specialite.title}} 
+    				{% endif %}
+    				program.<br><br>
+
+					Should she/he validate all required credits, she/he will get graduated by September {{ inscription.annee_diplome }}.<br><br>
+
+					<br><br>
+					Sincerely yours,
+					<br><br><br>
+    			
+    			</p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="center">
+					{{ institution.ville }}, on: {{ today }}	    			
+    			</p>
+    			
+    			<p align="center">
+    				M. {{inscription.formation.programme.departement.responsable}}<br>
+				<br>
+				{% if inscription.formation.programme.departement.signature.name %}
+					<img src="{{ inscription.formation.programme.departement.signature.url }}" alt="Signature" width="300" >
+				{% else %}
+					<br><br><br><br><br><br>
+				{% endif %}
+    			</p>
+    		</td>
+    	</tr>
+	</table>
+</big>
+{% endblock %}

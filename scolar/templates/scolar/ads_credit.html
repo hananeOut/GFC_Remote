@@ -1,0 +1,49 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ {% block content %}
+ {% load djmoney %}
+ <form id="demoForm" method="post"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+	<div class="content-wrapper">
+		<div class="row">
+			<div class="col-md-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<h3>Suivi des achats par régits </h3><br>
+						<p class="lead font-italic">Gestion des imputataions </p>
+						<form class="forms-sample">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">Credit alloué</label>
+										<div class="col-sm-9">	
+									    	<input type="number" class="form-control" name="credit_allouee" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+								    <a href="{% url 'CreditCreate' %}" class="btn btn-secondary btn-block">
+										<i class="fa fa-list"></i> Retour
+									</a>
+								</div>
+								<div class="col-md-4">
+									<button type="submit" class="btn btn-primary btn-block" >
+										<i class="fa fa-database"></i>Enregistrer</button>
+								</div>
+							</div>
+					</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </form>
+</html>
+{% endblock %}

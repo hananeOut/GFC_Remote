@@ -1,0 +1,38 @@
+{% load icons usergroup %}
+<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+       		<span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url "home" %}">Accueil</a>
+            </li>
+        </ul>
+        {% if user.is_authenticated %}
+            <ul class="navbar-nav mr-right">
+                <li class="nav-item">
+                    <a class="nav-link"">Logged in as {{ user.username }}</a>
+                </li>
+                {% if user|has_group:"direction" %}
+                <li class="nav-item">
+                	<a class="btn btn-outline-light my-2 my-sm-1" href="{% url 'settings' %}">{% icon 'cog' %}</a>
+                </li>
+                {% endif %}
+                <form class="form-inline my-2 my-lg-0" action="/accounts/logout/" method="POST">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-light my-2 my-sm-1" type="submit">Logout</button>
+                </form>
+            </ul>
+        {% else %}
+            <ul class="navbar-nav mr-right">
+                <li class="nav-item">
+                	<a class="btn btn-outline-light my-2 my-sm-1" href="/accounts/login">Login</a>
+                </li>
+            </ul>
+        {% endif %}
+    </div>
+</nav>

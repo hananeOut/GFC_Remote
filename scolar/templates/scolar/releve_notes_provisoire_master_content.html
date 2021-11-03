@@ -1,0 +1,103 @@
+  {% load dictionary %}
+	<div style="text-align: center;">
+	<img src="{{ institution.header.url }}" alt="Logo ESI" width="100%"> 
+	</div>
+
+		<br><br>
+		<h3 align="center"> <strong>RELEVE DE NOTES DE LA FORMATION COMPLEMENTAIRE DE MASTER</strong></h3>
+		<h5 align="center"> Partie Théorique</h5>
+		<br><br>
+
+		<table class="table table-borderless table-sm" width="100%">
+			<tr>
+				<td><strong> Année universitaire : {{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</td>
+				<td><strong> Année d'étude : {{inscription.formation.programme.titre}}</td>
+			</tr>
+			<tr>
+				<td>Nom : <strong>{{ inscription.etudiant.nom }}</strong> </td>
+				<td> Prénom : <strong>{{ inscription.etudiant.prenom }}</strong> </td>
+				<td> Date et lieu de naissance : <strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> à : <strong>{{inscription.etudiant.lieu_naissance}}</strong> </td>		
+			</tr>
+			<tr>
+				<td>Matricule : <strong>{{inscription.etudiant.matricule}}</strong>
+				<td>Domaine : <strong>{{inscription.formation.programme.diplome.domaine}}</strong>
+				<td>Filière : <strong>{{inscription.formation.programme.diplome.filiere}}</strong>
+				<td>Spécialité : <strong>{{inscription.formation.programme.specialite.intitule}}</strong>
+			</tr>
+			<tr>
+				<td colspan="4">Diplôme préparé : <strong>{{inscription.formation.programme.diplome}}</strong></td>
+			</tr>
+		</tr>
+		</table>
+	
+	<br><br>
+
+    		<table table width="100%">
+    			<thead>
+    				<tr>
+    					<th rowspan="2">Semestre</th>
+    					<th rowspan="2">Nature</th>
+    					<th rowspan="2">Code</th>
+    					<th rowspan="2">Coefficients</th>
+    					<th rowspan="2" colspan="2">Intitulé</th>
+    					<th rowspan="2">Coefficients</th>
+    					<th colspan="2">Matières</th>
+    				</tr>
+    				<tr>
+    					<th>Notes</th>
+    					<th>Session</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.periodepgm.code }}</td>
+						{% for ue in periode.resultat_ues.all %}
+							<td style="vertical-align:middle; text-align:left;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ categorie_ue|get_value_from_dict:ue.ue.type }}
+							</td>
+							
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ ue.ue.code }}
+							</td>
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.coef_provisoire }}
+							</td>
+
+							{% for resultat in ue.resultat_matieres.all %}	
+								{% if resultat.module.periode != periode.periodepgm %}
+									<td><strong>{{ resultat.module.matiere.code }}<sup>(*)</sup> </strong></td>
+								{% else %} 
+									<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								{% endif %}
+								<td>{{ resultat.module.matiere.titre }}</td>
+								<td>{{ resultat.coef_provisoire }}</td>
+								{% if resultat.module.periode == periode.periodepgm %}
+									<td>{{ resultat.moy }}</td>
+								{% else %}
+									<td style="text-align:center;">/ / / / /</td>
+								{% endif %}
+								<td>{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}</td>
+								</tr><tr>
+							{% endfor %}
+
+						{% endfor %}
+					</tr>
+    	    	</tbody>
+  			</table>
+	<br><br>
+	<table class="table table-borderless table-sm" width="100%">
+		<tr>
+			<td>Fait le : {{date|date:'d/m/Y'}}</td>
+		</tr>
+	</table>
+	<br>
+	{% if view.kwargs.signature == '1' and inscription.formation.programme.departement.signature.name %}
+		<img src="{{ inscription.formation.programme.departement.signature.url }}" alt="Signature" width="300" >
+		<br><br>
+	{% else %}
+		<br><br><br><br>
+	{% endif %}
+	<div style="text-align: center;">
+	<img src="{{ institution.footer.url }}" alt="Logo ESI" width="100%">
+	</div>

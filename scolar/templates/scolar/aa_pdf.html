@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	  {% load static %}
+	  {% load djmoney %}
+
+
+      {% load dictionary %}
+	  {% load mathfilters %}
+	  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	  <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	  <style>
+th, td {
+	  border: 2px solid black;
+	  border-collapse: collapse;
+	}
+td {
+		page-break-before:avoid;
+	}
+tr {
+         page-break-inside:avoid;
+    }
+</style>
+  </head>
+
+  <body>
+  <table width="100%">
+	  <tr>
+		  <td style="border: 0px ;text-align: left;"><strong> REGIE <br> </strong></td>
+	  </tr>
+	  <tr>
+		  <td style="border: 0px ;text-align: center;"> <strong> DEMANDE D'AVANCE -EXERCICE {{year}} <br> AVANCE N° 01 <br></strong></td>
+	  </tr>
+  </table>
+
+
+  <table  width="95%">
+	  <tr>
+		  <td><strong> Chapitres </strong></td>
+		  <td><strong> Articles </strong></td>
+		  <td><strong> Intitulé des chpitres budgétaire</strong></td>
+		  <td><strong> Montant/article</strong></td>
+		  <td><strong>Total/chapitre</strong></td>
+	  </tr>
+
+	  {% for chapitre in chapitres %}
+	  <tr>
+		  <td>{{chapitre.code_chap}}</td>
+		  <td>
+			  {% for article in articles %}
+			  {% if chapitre == article.chapitre %}
+			  <br>
+			  {{article.code_art}}
+			  {% else %}
+			  {% endif %}
+			  {% endfor %}
+		  </td>
+		  <td>
+			  <strong>{{chapitre.libelle_chap_FR}}</strong>
+			  {% for article in articles %}
+			  {% if chapitre == article.chapitre %}
+			  <br>
+			  {{article.libelle_art_FR}}
+			  {% else %}
+			  {% endif %}
+			  {% endfor %}
+		  </td>
+		  <td>
+			  {% for crd in crdt %}
+			  {% for article in articles %}
+			  {% if chapitre == article.chapitre %}
+			  {% if article == crd.article %}
+			  <br>
+			  {{crd.credit_allouee}}
+			  {% else %}
+			  {% endif %}
+			  {% else %}
+			  {% endif %}
+			  {% endfor %}
+			  {% endfor %}
+		  </td>
+		  <td style="vertical-align:top"><strong>
+			  {% for vect in vecteur %}
+			  {% if chapitre == vect  %}
+			  {% with next_element=vecteur|next:forloop.counter0 %}
+			  {{next_element}}
+			  {% with next_element=next_element|add:val %}
+			  {{ next_element }}
+			  {% endwith %}
+			  {% endwith %}
+			  {% endif %}
+			  {% endfor %}
+
+
+		  </strong></td>
+	  </tr>
+  {% endfor %}
+	  	  <tr>
+		  <td style="border: 0px ;"></td>
+		  <td style="border: 0px ;"></td>
+		  <td style="border: 0px ;"></td>
+		  <td style="text-align:center;"><strong>TOTAL</strong></td>
+		  <td style="text-align: center;" ><strong>
+
+
+					{{ my_variable }}
+
+
+		  </strong></td>
+
+	  </tr>
+
+
+  </table>
+
+  </body>
+</html>

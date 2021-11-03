@@ -1,0 +1,131 @@
+  {% load dictionary %}
+	<div style="text-align: center;">
+	<img src="{{ institution.header.url }}" alt="Logo ESI" width="100%"> 
+	</div>
+		<h3 align="center"> <strong>RELEVE DE NOTES PROVISOIRE du {{periode.periodepgm.code}}</strong></h3>
+		<br><br>
+		<table class="table table-borderless table-sm" width="100%">
+			<tr>
+				<td>Matricule : <strong>{{inscription.etudiant.matricule}}</strong>
+				<td><strong> Année universitaire : {{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</td>
+				<td><strong> Année d'étude : {{inscription.formation.programme.titre}}</td>
+			</tr>
+			<tr>
+				<td>Nom : <strong>{{ inscription.etudiant.nom }}</strong> </td>
+				<td> Prénom : <strong>{{ inscription.etudiant.prenom }}</strong> </td>
+				<td> Date de naissance : <strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> à : <strong>{{inscription.etudiant.lieu_naissance}}</strong> </td>		
+			</tr>
+			<tr>
+				<td colspan="4">Diplôme préparé : <strong>{{inscription.formation.programme.diplome}}</strong></td>
+			</tr>
+		</tr>
+		</table>
+	
+	<br><br>
+
+    		<table width="100%">
+    			<thead>
+    				<tr>
+    					<th rowspan="2">Semestre</th>
+    					<th rowspan="2">Nature</th>
+    					<th rowspan="2">Code</th>
+    					<th rowspan="2">Crédits<br>requis</th>
+    					<th rowspan="2">Coef</th>
+    					<th rowspan="2" colspan="2">Intitulé</th>
+    					<th rowspan="2">Crédits<br>requis</th>
+    					<th rowspan="2">Coef</th>
+    					<th colspan="3">Matières</th>
+    					<th colspan="3">UE</th>
+    					<th colspan="3">Semestre</th>
+    				</tr>
+    				<tr>
+    					<th>Notes</th>
+    					<th>Crédits</th>
+    					<th>Session</th>
+    					<th>Notes</th>
+    					<th>Crédits</th>
+    					<th>Session</th>
+    					<th>Notes</th>
+    					<th>Crédits</th>
+    					<th>Session</th>
+    				</tr>
+    			</thead>
+    			<tbody>
+    				<tr>
+    					<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.periodepgm.code }}</td>
+						{% for ue in periode.resultat_ues.all %}
+							<td style="vertical-align:middle; text-align:left;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ categorie_ue|get_value_from_dict:ue.ue.type }}
+							</td>
+							
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+								{{ ue.ue.code }}
+							</td>
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.credits_requis }}
+							</td>
+							<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+									{{ ue.coef_provisoire }}
+							</td>
+
+							{% for resultat in ue.resultat_matieres.all %}	
+								{% if resultat.module.periode != periode.periodepgm %}
+									<td><strong>{{ resultat.module.matiere.code }}<sup>(*)</sup> </strong></td>
+								{% else %} 
+									<td><strong>{{ resultat.module.matiere.code }}</strong></td>
+								{% endif %}
+								<td>{{ resultat.module.matiere.titre }}</td>
+								<td>{{ resultat.module.matiere.credit }}</td>
+								<td>{{ resultat.coef_provisoire }}</td>
+								{% if resultat.module.periode == periode.periodepgm %}
+									<td>{{ resultat.moy }}</td>
+								{% else %}
+									<td style="text-align:center;">/ / / / /</td>
+								{% endif %}
+								<td>{{ resultat.credits_obtenus }}</td>
+								<td>{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}</td>
+								{% if forloop.first %}
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{{ ue.moyenne_provisoire }}
+									</td>
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{{ ue.credits_obtenus }}
+									</td>
+									<td style="vertical-align:middle; text-align:center;" rowspan="{{ ue.resultat_matieres.count }}">
+											{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}
+									</td>
+									{% if forloop.parentloop.counter == 1 %}
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.moyenne_provisoire }}<sup>(**)</sup></td>
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode.credits_obtenus }}</td>
+										<td style="vertical-align:middle; text-align:center;" rowspan="{{periode.nb_matieres}}">{{ periode|session_from_inscription_periode:periode.periodepgm.periode }}</td>
+									{% endif %}
+   								{% endif %}
+								</tr><tr>
+							{% endfor %}
+
+						{% endfor %}
+					</tr>
+    	    	</tbody>
+  			</table>
+  			<small><strong>
+  			(*) 	Cette matière sera suivie durant le prochain semestre <br>
+  			(**)	Cette moyenne est provisoire, la moyenne définitive figurera dans le relevé de notes annuel définitif
+  			</strong></small>
+	<br><br>
+	<table class="table table-borderless table-sm" width="100%">
+		<tr>
+			<td>Fait le : {{date|date:'d/m/Y'}}</td>
+		</tr>
+	</table>
+	<br>
+	{% if view.kwargs.signature == '1' and inscription.formation.programme.departement.signature.name %}
+		<img src="{{ inscription.formation.programme.departement.signature.url }}" alt="Signature" width="300" >
+		<br>
+	{% else %}
+		<br><br><br>
+	{% endif %}
+	
+	<div style="text-align: center;">
+	<img src="{{ institution.footer.url }}" alt="Logo ESI" width="60%">
+	</div>

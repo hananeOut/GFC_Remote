@@ -1,0 +1,56 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load dictionary %}
+<br><br><br><br>
+
+{% block signataire %}
+				<br><br><br><br>
+    			<p align="left">
+    				M. {{ inscription.formation.programme.departement.responsable}}, <br>
+					Directeur du {{ inscription.formation.programme.departement.intitule }}<br>
+					{{ institution.nom}}, {{ institution.sigle }}, {{ institution.ville }} <br>
+					Email: {{ inscription.formation.programme.departement.responsable.user.email}} <br>
+    			</p>
+    			<br><br><br><br>
+{% endblock %}
+{% block title %} 
+	ATTESTATION D'ETUDES EN LANGUE FRANCAISE
+{% endblock %}
+{% block content %}	
+<br><br><br><br><br><br><br>
+    <table>
+    	<tr>
+    		<td>
+    			<p align="justify">
+    				Nous attestons que,<br><br> 
+    				M. (elle) : {{ inscription.etudiant.nom }} {{ inscription.etudiant.prenom}} / {{ inscription.etudiant.nom_a }} {{ inscription.etudiant.prenom_a }}, <br><br> 
+    				Né(e) le: {{ inscription.etudiant.date_naissance }} à {{ inscription.etudiant.lieu_naissance }}<br><br>
+    				Est inscrit(e) à l'{{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) sous N°: {{ inscription.etudiant.matricule }}. <br><br>
+    				Il/Elle poursuit des études de: {{ inscription.formation.programme.diplome.intitule}}.<br><br> 
+					L'ensemble de son cursus est dispensé en langue française.
+					<br><br>
+					Fait pour servir et valoir ce que de droit,
+					<br><br><br><br><br><br>
+    			
+    			</p>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td>
+    			<p align="center">
+					{{ institution.ville }}, le: {{ today|date:'d/m/Y' }}	    			
+    			</p>
+    			
+    			<p align="center">
+    				M. {{inscription.formation.programme.departement.responsable}}<br>
+				<br>
+				{% if inscription.formation.programme.departement.signature.name %}
+					<img src="{{ inscription.formation.programme.departement.signature.url }}" alt="Signature" width="300" >
+				{% else %}
+					<br><br><br><br><br><br>
+				{% endif %}
+
+    			</p>
+    		</td>
+    	</tr>
+	</table>
+{% endblock %}

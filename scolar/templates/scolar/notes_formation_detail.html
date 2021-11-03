@@ -1,0 +1,120 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 usergroup %}
+{% block content %}
+<h3>Notes des groupes de {{formation.programme.code}} du {{periode.code}} </h3>
+
+<a href="{{ back }}" class="btn btn-secondary">Retour</a>
+<a></a>
+<br><br>
+<div class="col-md-12">
+    	
+        <table class="table table-bordered table-sm">
+             <thead class="thead-dark">
+                 <tr>
+                 	<th>Groupe</th>
+                    {% for module_ in module_list %}
+                        <th>{{ module_.matiere.code }}</th>
+                    {% endfor %}
+                 </tr>
+            </thead>
+			
+            {% for groupe_ in groupe_list %}
+            	{% if groupe_.code %}
+            	<tr>
+            		<td>
+            			<strong>{{ groupe_.code }}</strong>
+            			{% if groupe_.pfe.intitule %}
+            				{% for inscrit_ in groupe_.inscriptionperiode_set.all %}
+            					<br>{{ inscrit_.inscription.etudiant }}
+            				{% endfor %}
+            			{% endif %}
+            		</td>
+            		{% for module_ in module_list %}
+						{% if module_.matiere.pfe %}
+							{% if groupe_.soutenance.date %}
+								<td class="table-success">
+							{% elif groupe_.soutenance %}
+								<td class="table-warning">
+							{% else %}
+								<td class="table-danger">
+							{% endif %}
+	    					{% if request.user|has_group:"enseignant" or request.user|has_group:"direction" or request.user|has_group:"stage" %}
+	    						<a href="{% url "note_pfe_update" groupe_pk=groupe_.id module_pk=module_.id %}" class="btn btn-danger">Modifier</a>
+		            			{% with groupe_.id|addstr:'_'|addstr:module_.id as key %}
+		            				{% with etat_saisie_list|get_value_from_dict:key as etat_saisie_ %}
+	            						{% if etat_saisie_ == 'N' or etat_saisie_ == 'C' %}
+	            							<a href="{% url "note_pfe_lock" groupe_pk=groupe_.id module_pk=module_.id %}" class="btn btn-secondary">{% icon 'unlock' %}</a>
+	            						{% else  %}
+	            							<a href="{% url "note_pfe_lock" groupe_pk=groupe_.id module_pk=module_.id %}" class="btn btn-secondary">{% icon 'lock' %}</a>
+	            						{% endif %}
+		            				{% endwith %}
+		            			{% endwith %}
+	    						{% if request.user|has_group:"stage" and groupe_.soutenance.date %}
+	    							<a href="{% url "pv_pfe_pdf" groupe_pk=groupe_.id module_pk=module_.id %}" class="btn btn-success">{% icon 'print' %} PV</a>
+	    							<a href="{% url "export_fiche_eval_pfe" groupe_pk=groupe_.id module_pk=module_.id %}" class="btn btn-info">{% icon 'file-excel' %} Fiche Evaluation</a>
+	    						{% endif %}
+	    						<br>
+	    					{% endif %}
+	    					<strong> Soutenance le: </strong>
+							{% if groupe_.soutenance.date %}
+								{{ groupe_.soutenance.date }}
+							{% endif %}
+							<br>
+							<strong> Jury composé de: </strong>
+							<ul>
+								{% if groupe_.soutenance.president %}
+									<li><strong>Président:</strong>{{ groupe_.soutenance.president }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.examinateur %}
+									<li><strong>Examinateur:</strong>{{ groupe_.soutenance.examinateur }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.rapporteur %}
+									<li><strong>Rapporteur:</strong>{{ groupe_.soutenance.rapporteur }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.coencadrant %}
+									<li><strong>Co-encadrant:</strong>{{ groupe_.soutenance.coencadrant }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.invite1 %}
+									<li><strong>Invité 1:</strong>{{ groupe_.soutenance.invite1 }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.invite2 %}
+									<li><strong>Invité 2:</strong>{{ groupe_.soutenance.invite2 }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.assesseur1 %}
+									<li><strong>Assesseur 1:</strong>{{ groupe_.soutenance.assesseur1 }}</li>
+								{% endif %}
+								{% if groupe_.soutenance.assesseur2 %}
+									<li><strong>Assesseur 2:</strong>{{ groupe_.soutenance.assesseur2 }}</li>
+								{% endif %}
+							</ul>
+							</td>
+						{% else %}
+	            			{% with groupe_.id|addstr:'_'|addstr:module_.id as key %}
+	            				{% with etat_saisie_list|get_value_from_dict:key as etat_saisie_ %}
+	            					{% if etat_saisie_ %}
+	            						{% if etat_saisie_ == 'N' %}
+	            							<td class="table-danger">
+	            						{% elif etat_saisie_ == 'C' %}
+	            							<td class="table-warning">
+	            						{% elif etat_saisie_ == 'T' %}
+	            							<td class="table-success">
+	            						{% endif %}
+	            						Coord. <strong>{{ module_.coordinateur }}</strong>
+	            						<br><a href="{% url "note_list" groupe_pk=groupe_.id matiere_pk=module_.matiere.id %}">{% icon 'eye' %}</a>
+	            							<a href="{% url "export_notes" groupe_pk=groupe_.id module_pk=module_.id %}">{% icon 'download' %}</a>
+	            						</td>
+	            					{% else %}
+	            						<td class="table-active"></td>
+	            					{% endif %}
+	            				{% endwith %}
+	            			{% endwith %}
+	            		{% endif %}
+            		{% endfor %}
+            	</tr>
+            	{% endif %}
+            {% endfor %}
+            
+        </table>
+</div>
+<br><br><br><br>
+{% endblock %}

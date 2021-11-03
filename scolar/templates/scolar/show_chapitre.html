@@ -1,0 +1,60 @@
+
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ {% block content %}
+<form id="demoForm" method="post"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+   <div class="content-wrapper">
+      <div class="row">
+         <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+               <div class="card-body">
+                  <h3>Suivi des achats par régits </h3>
+                   <p class="lead font-italic">Listes des chapitres </p>
+                     <hr class="my-4">
+                     <table class="table table-borderless">
+                         <thead class="border-bottom font-weight-bold">
+                         <tr>
+                             <th>code_chapitre</th>
+                             <th>libelle_chapitre_FR</th>
+                             <th>libelle_chapitre_AR</th>
+                             <th>
+                                 <a href="{% url 'ChapitreCreate' %}"
+                                              class="btn btn-outline-success d-inline">
+                                     <i class="fa fa-plus">Ajouter chapitre</i>
+                                 </a>
+                             </th>
+                         </tr>
+                         </thead>
+                         <tbody>
+                         {% for chap in chapitre %}
+                         <tr>
+                             <td>{{chap.code_chap}}</td>
+                             <td>{{chap.libelle_chap_FR}}</td>
+                             <td>{{chap.libelle_chap_AR}}</td>
+                             <td>
+                                 <a style="padding-left:30px;" href="{% url 'ChapitreDelete' chap.id %}" class="d-inline" >
+                                     <i class="fa fa-trash-alt fa-lg "></i>
+                                 </a>
+                                 <a style="padding-left:30px;" href="{% url 'ArticleCreate' chap.id %}" class="d-inline" >
+                                     <i class="fa fa-file-alt fa-lg"></i>
+                                 </a>
+                             </td>
+                         </tr>
+                         {% endfor %}
+                         </tbody>
+                     </table>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</form>
+</html>
+
+{% endblock %}

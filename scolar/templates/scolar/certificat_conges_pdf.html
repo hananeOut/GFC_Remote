@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+	
+  </head>
+  <body>
+	    {% load dictionary usergroup %}
+  	<table>
+  		<tr>
+  			<td>
+				<table >
+	    			<tr>
+		    			<td colspan="3">
+		        	 		<img src="{{ institution.header.url }}" width="800" alt="Logo ESI" > 
+		    			</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					<br><br><br><br>
+							<h1 align="center">
+								Attestation
+							</h1>
+							<br><br><br><br>
+						</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					Le Chef de {{ inscription.formation.programme.departement }} de l'{{ institution.nom }} ({{ institution.sigle }}, {{ institution.ville }}) atteste que:
+	    					<br><br>
+	    				</td>
+	    			</tr>
+					<tr>
+						<td style="text-align:left;">M (Melle):<br><br></td> 
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.nom }}</strong><br><br></td>
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.prenom }}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Né (e) le:<br><br></td>
+						<td style="text-align:left;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong><br><br></td>
+						<td style="text-align:left;"><strong>à : {{inscription.etudiant.lieu_naissance}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">N° d'inscription:<br><br></td>
+						<td style="text-align:left;"><strong>{{inscription.etudiant.matricule}}</strong><br><br></td>
+						<td style="text-align:left;"><br><br></td>
+					</tr>
+					<tr>	
+						<td style="text-align:left;">Est inscrit(e) en:<br><br></td> 
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.programme.titre}}</strong><br><br></td>
+					</tr>
+					<tr>	
+						<td style="text-align:left;">Option:<br><br></td> 
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.programme.specialite.intitule}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;">Bénificie d'un  <br><br></td>
+						<td style="text-align:left;" colspan="2"><strong>{{raison}}</strong><br><br></td>
+					</tr>
+
+					<tr>
+						<td style="text-align:left;">Durant l'année universitaire: <br><br></td>
+						<td style="text-align:left;" colspan="2"><strong>{{inscription.formation.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante}}</strong><br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:left;" colspan="3">Cette attestation est délivrée pour servir et valoir ce que de droit.<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							<br><br>
+							Fait à {{ institution.ville }}, le:	<strong>{{date|date:'d/m/Y'}}</strong><br>
+							{% if view.kwargs.signature == '1' and inscription.formation.programme.departement.signature.name %}
+								<img src="{{ inscription.formation.programme.departement.signature.url }}" alt="Signature" width="300" >
+							{% else %}
+								<br><br><br><br><br><br><br>
+							{% endif %}
+						</td>
+					</tr>
+			    	<tr>
+				    	<td colspan="3">
+				        	 <img src="{{ institution.footer.url }}"  width="800" alt="Logo ESI"> 
+				    	</td>
+			    	</tr>
+  				</table>
+  			</td>
+			<td>
+				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>				
+			</td>
+  			<td>
+				<table >
+	    			<tr>
+		    			<td colspan="3">
+		        	 		<img src="{{ institution.header.url }}" width="800" alt="Logo ESI" > 
+		    			</td>
+	    			</tr>
+	    			<tr>
+	    				<td colspan="3">
+	    					<br><br><br><br>
+							<h1 align="center">
+								شهادة
+							</h1>
+							<br><br><br><br>
+						</td>
+	    			</tr>
+	    			<tr>
+	    				<td style="text-align:right;" colspan="3">
+	    					يشهد رئيس {{ inscription.formation.programme.departement.intitule_a }} ب{{ institution.nom_a }} بان	<br><br>
+	    				</td>
+	    			</tr>
+					<tr>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.prenom_a }}</strong><br><br></td>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.nom_a }}</strong><br><br></td>
+						<td style="text-align:right;">السيد / السيدة<br><br></td> 
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong>ب : {{inscription.etudiant.lieu_naissance_a}}</strong><br><br></td>
+						<td style="text-align:right;"><strong>{{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</strong><br><br></td>
+						<td style="text-align:right;">المولود(ة) في<br><br></td>
+						
+						
+					</tr>
+					<tr>
+						<td style="text-align:right;"><br><br></td>
+						<td style="text-align:right;"><strong>{{inscription.etudiant.matricule}}</strong><br><br></td>
+						<td style="text-align:right;">رقم التسجيل<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:right;"><strong>{{inscription.formation.programme.titre_a}}</strong><br><br></td>	
+						<td style="text-align:right;" colspan="2">مسجل (ة) بالمدرسة لمتابعة دراسته (ها) العليا في<br><br></td>
+					</tr>
+					<tr>	
+						<td style="text-align:right;" colspan="2"><strong>{{inscription.formation.programme.specialite.intitule_a}}</strong><br><br></td>
+						<td style="text-align:right;">فرع<br><br></td> 
+					</tr>
+					<tr>
+						<td colspan="2"><strong> {{ raison|arabic }} </strong><br><br></td>
+						<td style="text-align:right;">يستفيد من<br><br></td>
+					</tr>
+					<tr>
+						<td style="text-align:right;" colspan="2"><strong>{{inscription.formation.annee_univ.annee_suivante}}/{{inscription.formation.annee_univ}}</strong><br><br></td>
+						<td style="text-align:right;">خلال السنة الجامعية<br><br></td>
+						
+					</tr>
+					<tr>
+						<td style="text-align:right;" colspan="3">تمنح هذه الشهادة لاستخدامها بما يسمح به القانون<br><br>
+						</td>
+					</tr>
+					<tr>
+						<td style="text-align:center;" colspan="3">
+							<br><br>
+							{{ institution.ville_a }} في	<strong>{{date|date:'Y/m/d'}}</strong><br>
+							{% if view.kwargs.signature == '1' and inscription.formation.programme.departement.signature.name %}
+								<img src="{{ inscription.formation.programme.departement.signature.url }}" alt="Signature" width="300" >
+							{% else %}
+								<br><br><br><br><br><br><br>
+							{% endif %}
+						</td>
+					</tr>
+			    	<tr>
+				    	<td colspan="3">
+				        	 <img src="{{ institution.footer.url }}"  width="800" alt="Logo ESI"> 
+				    	</td>
+			    	</tr>
+  				</table>
+  			</td>
+  			<td>
+				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>
+  				&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>&nbsp&nbsp|&nbsp&nbsp<br>				
+  			
+  			</td>
+  		</tr>
+  	</table>
+  </body>
+</html> 

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <style>
+    	@media print {
+  			.new-page {
+    		page-break-before: always;
+  			}
+		}
+    </style>
+	<style>
+	table {
+		page-break-inside:auto;
+	}
+	th, td {
+	  border: 1px solid black;
+	  border-collapse: collapse;
+	}
+	td {
+		page-break-before:avoid;
+	}
+	tr {
+         page-break-inside:avoid;
+    }
+	</style>
+	<style type="text/css" media="print">
+		 table thead {display: table-header-group;}
+		 table tfoot {display: table-footer-group;}
+		 table tbody {display: table-row-group;}
+	</style>        
+    
+  </head>
+  <body>
+  	{% for departement in departement_list %}
+		<div class="new-page">
+		    <img src="{{ institution.header.url }}" alt="Logo ESI" >
+			<h3 align="center"> 
+				<strong>RELEVE DE NOTES GLOBAL : {{ departement.cycle_intitule }}</strong>
+			</h3>
+			<table class="table table-borderless table-sm" width="100%">
+				<tr>
+				<td>Nom : <strong>{{ etudiant.nom }}</strong> </td>
+				<td> Prénom : <strong>{{ etudiant.prenom }}</strong> </td>
+				<td>Matricule : <strong>{{ etudiant.matricule}}</strong></td>
+				<td> Date de naissance : <strong> {{ etudiant.date_naissance|date:'d/m/Y' }}</strong> </td>
+				<td> à : <strong>{{ etudiant.lieu_naissance}}</strong> </td>				
+				</tr>
+			</table>
+			{% for inscription in inscription_list %}
+				{% if inscription.formation.programme.departement == departement %}
+					<br>
+					{% include './releve_notes_content_min.html' %}
+				{% endif %}
+			{% endfor %}
+			Fait le: {{ date|date:'d/m/Y'}}
+			<br><br><br><br><br><br><br><br>
+		   	<div style="text-align: center;">
+				<img src="{{ institution.footer.url }}" alt="Logo ESI" width="100%">
+			</div> 			
+		</div>
+	{% endfor %}
+  </body>
+ </html>

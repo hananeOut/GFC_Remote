@@ -1,0 +1,126 @@
+{% extends 'scolar/modele_landscape_pdf.html' %}
+{% load django_tables2 crispy_forms_tags bootstrap4 jchart icons usergroup dictionary %}
+{% block content %}
+ 	<br><br>
+	<h1 style="text-align: center;">Fiche d'Inscription {{inscription.formation.annee_univ.annee_univ}}/{{inscription.formation.annee_univ.annee_suivante.annee_univ}}</h1>
+	<br><br>
+	<div style="text-align: center;" class="row">
+		<div class="col-md-6">
+			<h3 class="text-center"> <strong>Matricule: </strong>{{ inscription.etudiant.matricule }} </h3>
+		</div>
+		{% if inscription.etudiant.photo.name %}
+		<div class="col-lg-2" alt"Photo">
+			<img src="{{ inscription.etudiant.photo.url }}" height="230">
+		</div>
+		{% else %}
+			<strong>PHOTO</strong>
+		{% endif %}
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+			<table class="table table-striped" width="80%">
+				<tr>
+					<td><strong> Nom :  </strong> {{ inscription.etudiant.nom }}  {{ inscription.etudiant.nom_a }}</td>
+					<td><strong> Prénom :  </strong> {{ inscription.etudiant.prenom }}  {{ inscription.etudiant.prenom_a }}</td>
+				</tr>
+				<tr>
+					<td><strong> Né(e) le :  </strong> {{ inscription.etudiant.date_naissance|date:'d/m/Y' }}</td>
+					<td><strong> à :  </strong> {{ inscription.etudiant.lieu_naissance }} {{ inscription.etudiant.lieu_naissance_a }}</td>
+				</tr>
+					{% if inscription.etudiant.wilaya_residence %}
+					<tr>
+						<td colspan="2"><strong> Adresse :  </strong> {{ inscription.etudiant.addresse_principale }}</td>
+					</tr>
+					<tr>
+						<td><strong> Wilaya  </strong> {{ inscription.etudiant.wilaya_residence }}</td>
+						<td><strong> Commune  </strong> {{ inscription.etudiant.commune_residence }}</td>
+					</tr>
+					{% endif %}
+				<tr>
+					<td><strong> Interne :  </strong> {% if inscription.etudiant.interne %} Oui {% else %} Non {% endif %} </td>
+					<td>
+					{% if inscription.etudiant.interne %}
+						<strong> Résidence Universitaire :  </strong> {{ inscription.etudiant.residence_univ }}
+					{% endif %}
+					</td>
+				</tr>
+				<tr>
+					{% if inscription.etudiant.numero_securite_sociale %}
+						<td colspan="2"><strong> Numéro de Sécurité Sociale :  </strong> {{ inscription.etudiant.numero_securite_sociale }}</td>
+					{% else %}
+						<td colspan="2"><strong> Numéro de Sécurité Sociale :  </strong> Non Renseigné </td>	
+					{% endif %}
+
+				</tr>
+				{% if inscription.etudiant.tel %}
+				<tr>
+						<td colspan="2"><strong> Téléphone :  </strong> {{ inscription.etudiant.tel }}</td>
+				</tr>
+				{% else %}
+				<tr>
+						<td colspan="2"><strong> Téléphone :  </strong> Non Renseigné </td>
+				</tr>
+				{% endif %}
+
+				<tr>
+					<td colspan="2"><strong>Email:</strong> {{ inscription.etudiant.user.email }}</td>
+				</tr>
+				<tr>
+					<td>
+						<strong>Situation Année précédente:</strong> 
+									{% if inscription_annee_precedente %}
+										{% if inscription_annee_precedente.decision_jury == 'A' or inscription_annee_precedente.decision_jury == 'AR' %}
+											<p class="alert alert-success"> 
+												{{ inscription_annee_precedente }}<br>
+												Décision du jury: <strong>{{ decision_jury|get_value_from_dict:inscription_annee_precedente.decision_jury }}</strong>
+											</p>
+										{% else %}
+											<p class="alert alert-danger"> 
+												{{ inscription_annee_precedente }}<br>
+												Décision du jury: <strong>{{ decision_jury|get_value_from_dict:inscription_annee_precedente.decision_jury }}</strong>
+											</p>
+										{% endif %}
+									{% else %}
+											<p class="alert alert-danger"> 
+												<strong>Non disponible </strong>
+											</p>
+									{% endif %}
+					</td>
+					<td>
+						<strong>Demande d'inscription en:</strong>
+								<p class="alert alert-info">
+									{{ inscription }}
+								</p>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<strong>Quittance de Payement des frais d'inscription :</strong>
+					</td>
+					<td>
+						{% if inscription.quittance.name %} 
+							Ci-jointe
+						{% else %}
+							Pas de quittance
+						{% endif %}
+					</td>
+	    		</tr>
+	    		<tr>
+	    			<td>
+	    				<strong>J'ai lu et j'approuve le réglement intérieur des études</strong>
+	    			</td>
+	    			<td>
+	    				{{inscription.etudiant}}, Fait le: {{ date|date:'d/m/Y'}} <br><br>
+	    				Signature
+	    			</td>
+	    		</tr>
+
+			</table>
+		</div>
+	</div>
+				
+				
+			
+	<br><br><br><br><br><br>
+	
+{% endblock %}

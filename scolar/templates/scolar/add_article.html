@@ -1,0 +1,104 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ {% block content %}
+ <form id="demoForm" method="post"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+	<div class="content-wrapper">
+		<div class="row">
+			<div class="col-md-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<h3>Suivi des achats par régits </h3>
+						<br>
+						<form class="forms-sample">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label" for="number1" >Code article</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" name="code_art" id="number1"  />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">Libellé en français</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" name="libelle_art_FR" />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">Libellé en arabe</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" name="libelle_art_AR" />
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-4">
+									<a href="{% url 'ChapitreShow' %}" class="btn btn-secondary btn-block">
+										<i class="fa fa-list"></i> Retour
+									</a>
+								</div>
+								<div class="col-md-4">
+									<button type="submit" class="btn btn-primary btn-block" >
+										<i class="fa fa-database"></i>Enregistrer</button>
+								</div>
+							</div>
+						</form>
+						<div class="content-wrapper">
+							<div class="row">
+								<div class="col-md-12 grid-margin stretch-card">
+									<div class="card">
+										<div class="card-body">
+											<p class="lead font-italic">Listes des Articles </p>
+											<hr class="my-4">
+											<table class="table table-borderless">
+												<thead class="border-bottom font-weight-bold">
+												<tr>
+													<th>code_chapitre</th>
+													<th>code_Article</th>
+													<th>libelle_Article_FR</th>
+													<th>libelle_Article_AR</th>
+												</tr>
+												</thead>
+												<tbody>
+												{% for art in articles %}
+												<tr>
+													<td>{{art.chapitre.code_chap}}</td>
+													<td>{{art.code_art}}</td>
+													<td>{{art.libelle_art_FR}}</td>
+													<td>{{art.libelle_art_AR}}</td>
+													<td>
+														<a style="padding-left:30px;" href="{% url 'ArticleDelete' art.id %}" class="d-inline" >
+															<i class="fa fa-trash-alt fa-lg "></i>
+														</a>
+													</td>
+												</tr>
+												{% endfor %}
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </form>
+</html>
+
+{% endblock %}

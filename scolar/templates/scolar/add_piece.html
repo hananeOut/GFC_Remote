@@ -1,0 +1,141 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags icons bootstrap4 %}
+{% bootstrap_css %}         {# Embed Bootstrap CSS #}
+{% bootstrap_javascript jquery='full' %}  {# Embed Bootstrap JS+jQuery #}
+ {% load djmoney %}
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+ <!-- Required meta tags -->
+ <meta charset="utf-8">
+ {% block content %}
+ <form id="demoForm1" method="post"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+
+	 <div class="content-wrapper">
+		<div class="row">
+			<div class="col-md-12 grid-margin stretch-card">
+				<div class="card">
+					<div class="card-body">
+						<h3>Ajouter les pieces au bordereau courant :  {{pi.deseingnation}} </h3>
+						<br>
+						<form class="forms-sample">
+							{% if pi.cloture == False %}
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">Désignation</label>
+										<div class="col-sm-9">
+											<input type="text" class="form-control" name="deseingnation" />
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="col-sm-3 col-form-label">Montant</label>
+										<div class="col-sm-9">
+											<input type="number" class="form-control" name="montant" />
+										</div>
+									</div>
+								</div>
+							</div>
+							{% else %}
+							{% endif %}
+							<div class="row">
+								<div class="col-md-4">
+									<a href="{% url 'LitImput' %}" class="btn btn-secondary btn-block">
+										<i class="fa fa-list"></i>  Retour
+									</a>
+								</div>
+								<div class="col-md-4" >
+									{% if pi.cloture == False %}
+									<button type="submit" class="btn btn-primary btn-block"  name="Enregistrer" >
+										<i class="fa fa-database" ></i>  Enregistrer</button>
+									{% else %}
+									{% endif %}
+
+								</div>
+							</div>
+						</form>
+						<div class="content-wrapper">
+							<div class="row">
+								<div class="col-md-12 grid-margin stretch-card">
+									<div class="card">
+										<div class="card-body">
+											<p class="lead font-italic">Listes des Pieces pour borderau en cours </p>
+											<hr class="my-4">
+											<table class="table table-borderless">
+												<thead class="border-bottom font-weight-bold">
+												<tr style="border: 1px solid black; padding: 0px; border-radius: 0px; background-color:#556b2f;">
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px; background-color:#556b2f;">Piece</th>
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Chapitre</th>
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Article</th>
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Borderau</th>
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Désignation</th>
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Montant</th>
+													<th style="border: 1px solid black; padding: 0px; border-radius: 0px;">Action</th>
+												</tr>
+												</thead>
+												<tbody>
+												{% for piece in pieces %}
+												<tr style="border: 1px solid black; padding: 0px; border-radius: 0px;">
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{piece.id}}/{{year}}</td>
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{piece.bordreau.credit.chapitre.code_chap}}</td>
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{piece.bordreau.credit.article.code_art}}</td>
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{piece.bordreau.id}}</td>
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{piece.deseingnation}}</td>
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">{{piece.montant}}</td>
+													<td style="border: 1px solid black; padding: 0px; border-radius: 0px;">
+														{% csrf_token %}
+														<div class="content-wrapper">
+															{% if pi.cloture == False %}
+															<a style="padding-left:30px;" href="{% url 'PieceDelete' piece.id %}" class="d-inline" >
+																<i class="fa fa-trash-alt fa-lg "></i>
+															</a>
+															{% else %}
+															{% endif %}
+															{% if pi.cloture == True %}
+															{% else %}
+															{% endif %}
+														</div>
+													</td>
+												</tr>
+												{% endfor %}
+													<tr>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td></td>
+													<td style="border: 3px solid black; padding: 0px; border-radius: 0px; background-color:#a9a9a9;"> Nombre Pcs : {{nb_pieces}} </td>
+													<td style="border: 3px solid black; padding: 0px; border-radius: 0px; background-color:#a9a9a9 ;">Somme Pcs : {{sum_pieces}} </td>
+												   </tr>							
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+ </form>
+ <form id="demoForm" method="POST"  action = "" class="post-form" enctype="multipart/form-data">
+ {% csrf_token %}
+	<div class="content-wrapper">
+		{% if pi.cloture == False %}
+		<div class="col-md-12">
+			<button type="submit" class="btn btn-primary btn-block" name="Cloturer" enabled><i  class="fas fa-ban" ></i>  Clôturer le bordereau</button>
+		</div>
+		{% else %}
+	    {% endif %}
+	    {% if pi.cloture == True %}
+	</div>
+		{% else %}
+	    {% endif %}
+	 <a href="{% url 'aa_bordereau_pdf' pi.id %}" download target="_blank" class="btn btn-secondary btn-block">
+		 <i class="fas fa-print"></i>  Imprimer le bordereau</a>
+	 </div>
+ </form>
+</html>
+{% endblock %}

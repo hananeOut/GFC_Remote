@@ -1,0 +1,84 @@
+{% extends 'scolar/index.html' %}
+{% load icons dictionary bootstrap4 usergroup %}
+
+
+{% block content %}
+
+
+	<br><br>
+	<h1>Notes du module {{ module.matiere.code }} 
+		{% if groupe %}
+			de {{ groupe }} 
+		{% endif %}
+	</h1>
+    <br><br>
+    {% if groupe %}
+	    {% if request.user|has_group:"enseignant" or request.user|has_group:"direction" or request.user|has_group:"stage" %}
+	    	{% if module.matiere.pfe %}
+	    		<a href="{% url "note_pfe_update" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-danger">Modifier</a>
+	    		{% if request.user|has_group:"stage" %}
+	    			<a href="{% url "pv_pfe_pdf" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-success">{% icon 'print' %} PV</a>
+	    			<a href="{% url "export_fiche_eval_pfe" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-info">{% icon 'file-excel' %} Fiche Evaluation</a>
+	    		{% endif %}
+	    	{% else %}
+	    		<a href="{% url "note_update" groupe_pk=groupe.id matiere_pk=module.matiere.id %}" class="btn btn-danger">Modifier</a>
+	    		<a href="{% url "export_notes" groupe_pk=groupe.id module_pk=module.id %}" class="btn btn-info">{% icon 'download' %} Export Excel</a>
+	    		<a href="{% url "notes_module_import" module_pk=module.id groupe_pk=groupe.id %}" class="btn btn-info">{% icon 'cloud-upload-alt' %} Import Excel</a>
+	    	{% endif %}
+	    {% endif %}
+    {% endif %}
+    
+    <!--
+    <a href="{% url "notes_formation_detail" formation_pk=module.formation.id periode_pk=module.periode.id %}" class="btn btn-secondary">Retour</a>
+    -->
+    <br><br>
+    <div class="row">
+    <div class="col-lg-12">
+    	<table class="table table-bordered table-sm">
+    		<thead class="thead-dark">
+				<tr>
+					<th>Etudiant</th>
+					{% for eval_ in evaluation_list  %}
+						<th class="text-center">{{ eval_.type }}x{{ eval_.ponderation }}</th>
+					{% endfor %}
+					<th>Moyenne</>
+				</tr>
+			</thead>
+    		<tbody>
+				{% for inscrit_ in inscription_list  %}
+					<tr>
+						<td>
+							<strong>{{ inscrit_.etudiant }} </strong>
+						</td>
+						{% for eval_ in evaluation_list  %}
+							
+								{% with inscrit_|addstr:" "|addstr:eval_ as key %}
+									{% with note_list|get_value_from_dict:key as note_ %}
+										{% if note_ %}
+											<td class="text-center">
+												{{ note_.note }}
+											</td>
+                						{% else %}
+                							<td class="text-center">
+                    						 	--
+                    						</td>
+										{% endif %}
+									{% endwith %}
+								{% endwith %}
+							
+						{% endfor %}
+						<td>
+							{% with resultat_list|get_value_from_dict:inscrit_.etudiant.matricule as resultat_ %}
+								<strong>{{ resultat_.moy }} </strong>
+							{% endwith %}
+						</td>
+
+					</tr>
+				{% endfor %}
+    		</tbody>
+		</table>    
+	</div>
+	</div>
+
+    
+{% endblock %}

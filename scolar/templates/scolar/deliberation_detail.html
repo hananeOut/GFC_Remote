@@ -1,0 +1,58 @@
+{% extends 'scolar/index.html' %}
+{% load django_tables2 crispy_forms_tags usergroup icons dictionary usergroup %}
+{% block content %}
+
+
+
+<script>
+function formation_archive_toggle(){
+      window.location.href="{% url "formation_archive_toggle" formation_pk=formation.id %}"
+}     
+</script>
+
+	{% if request.user|has_group:"direction" %}
+		 <ul class="nav nav-tabs">
+			<li class="nav-item">
+			    <a class="nav-link active" data-toggle="tab" href="#pv">Procès Verbal</a>
+			</li>
+			{% for periode in formation.programme.periodes.all %}
+			 	<li class="nav-item dropdown">
+			    	<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Semestre {{periode.periode.code}}</a>
+			    	<div class="dropdown-menu">
+						<a class="dropdown-item" href="{% url "note_eliminatoire_update" formation_pk=formation.id %}">Calculer Notes Eliminatoires</a>
+			      		<a class="dropdown-item" href="{% url "deliberation_provisoire_settings" formation_pk=formation.id periode_pk=periode.periode.id %}">{% icon 'print' %} Générer PV délibération </a>
+			    	</div>
+			  	</li>
+			{% endfor %}
+		 	<li class="nav-item dropdown">
+		    	<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">Annuel</a>
+		    	<div class="dropdown-menu">
+					<a class="dropdown-item" href="{% url "note_eliminatoire_update" formation_pk=formation.id %}">Calculer Notes Eliminatoires</a>
+		      		<a class="dropdown-item" href="{% url "deliberation_calcul" formation_pk=formation.id %}">Calculer Moy & Rang</a>
+					<a class="dropdown-item" href="{% url "import_deliberation" annee_univ_pk=formation.annee_univ.annee_univ %}">Importer PV {% icon 'file-excel' %}</a>
+					<a class="dropdown-item" href="{% url "deliberation_annuelle_settings" formation_pk=formation.id %}">Générer PV de délibération Annuelle </a>
+					<a class="dropdown-item" href="{% url "confirmer_deliberation" formation_pk=formation.id %}">Confirmation et envoi des décisions </a>
+		      		<a class="dropdown-item" href="{% url "inscription_annee_suivante" formation_pk=formation.id %}">Passage Année Suivante</a>
+		    	</div>
+		  	</li>
+		</ul> 	
+	{% endif %}
+	<br><br>
+<!-- Tab panes -->
+<div class="tab-content">
+	<div class="tab-pane container active" id="pv">
+		<h2>Procès Verbal de délibération de la formation {{ formation }}:</h2>
+		{% if formation.archive %}
+					<strong>Archivé</strong> <input id="archived" type="checkbox" data-toggle="toggle" checked onclick="formation_archive_toggle()">
+		{% else %} 
+					<strong>Non Archivé</strong> <input id="archived" type="checkbox" data-toggle="toggle" onclick="formation_archive_toggle()">
+		{% endif %}
+		<br><br>
+		{% render_table pv_list %}
+		
+	
+	</div>
+</div>	
+
+{% endblock %}
+	
